@@ -2,7 +2,8 @@
   <div class="login">
     <div class="container">
         <img src="../assets/avatar.jpg" alt="" class="avatar">
-      <el-form :model="loginForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+        <!-- @keyup.enter.native事件绑定回车事件，出现点击回车后，浏览器会刷新页面的问题； -->
+      <el-form :model="loginForm" :rules="rules" ref="loginForm" class="demo-ruleForm" @keyup.enter.native="login">
         <el-form-item prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名" clearable prefix-icon="icon-user"></el-input>
         </el-form-item>
@@ -10,21 +11,28 @@
           <el-input v-model="loginForm.password" placeholder="请输入6~16位的密码" clearable prefix-icon="icon-key" ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" class="login-btn">登陆</el-button>
+          <el-button type="primary" class="login-btn" @click="login">登陆</el-button>
         </el-form-item>
+          <el-switch style="display: block" v-model="value4" active-color="#13ce66" inactive-color="#ff4949"
+            active-text="按月付费登录"
+            inactive-text="按年付费登录">
+          </el-switch>
       </el-form>
+
     </div>
   </div>
 </template>
 
 <script>
+import { userLogin } from '@/api/user'
 export default {
   data () {
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: '10086',
+        password: '123123123'
       },
+      value4: true,
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
@@ -34,6 +42,30 @@ export default {
           { min: 6, max: 16, message: '请输入6~16位密码', trigger: 'blur' }
         ]
       }
+    }
+  },
+  methods: {
+    login () {
+      this.$refs.loginForm.validate(async (valid) => {
+        if (valid) {
+          console.log('数据格式正确，发送请求，登录')
+          let res = await userLogin(this.loginForm)
+          console.log(res)
+          if (res.data.message === '登录成功') {
+            this.$message.success(res.data.message)
+            // 本地存储token 使用导航守卫判断
+            localStorage.setItem('token', res.data.data.token)
+            // 跳转首页
+            this.$router.push({ path: '/' })
+          } else if (res.data.message === '用户不存在') {
+            this.$message.warning(res.data.message)
+          }
+        } else {
+          // console.log('你输入的数据格式不正确')
+          this.$message.error('你输入的数据格式不正确')
+          return false
+        }
+      })
     }
   }
 }
@@ -70,5 +102,8 @@ export default {
       width: 100%;
     }
   }
+}
+.el-switch{
+  text-align: center
 }
 </style>

@@ -2,7 +2,10 @@
   <div class="home">
     <el-container>
       <el-aside width="200px">
+            <div class="logo"></div>
         <el-menu
+          :router='true'
+          :unique-opened='true'
           default-active="2"
           class="el-menu-vertical-demo"
           background-color="#545c64"
@@ -24,7 +27,7 @@
               <i class="el-icon-location"></i>
               <span>文章列表</span>
             </template>
-            <el-menu-item index="2-1">
+            <el-menu-item index="postList">
               <i class="el-icon-location"></i>
               <span>文章列表</span>
             </el-menu-item>

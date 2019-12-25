@@ -150,6 +150,7 @@ export default {
       console.log(res)
       if (res.data.message === '文章发布成功') {
         this.$message.success(res.data.message)
+        // 发布成功页面跳转
         this.$router.push({ path: '/postList' })
       }
     },

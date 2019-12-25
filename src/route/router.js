@@ -5,6 +5,7 @@ import Login from '@/views/Login.vue'
 import index from '@/views/index.vue'
 import welcome from '@/views/welcome.vue'
 import postList from '@/views/postList.vue'
+import postPublish from '@/views/postPublish.vue'
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -31,6 +32,11 @@ const router = new VueRouter({
           name: 'postList',
           path: 'postList',
           component: postList
+        },
+        {
+          name: 'postPublish',
+          path: '/postPublish',
+          component: postPublish
         }
       ]
     }
@@ -39,7 +45,7 @@ const router = new VueRouter({
 
 // 导航守卫
 router.beforeEach((to, from, next) => {
-  console.log(to)
+  // console.log(to)
   if (to.path.indexOf('/Login') === -1) {
     let token = localStorage.getItem('token')
     if (token) {
